@@ -1,0 +1,54 @@
+
+server:
+  port: 9393
+spring:
+  rabbitmq:
+    virtual-host: test
+    username: lyy
+    password: 970120
+    port: 5672
+    host: 127.0.0.1
+    publisher-confirms: true
+    exchange: lyy1
+  application:
+    name: lyy
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://127.0.0.1:3306/lyy?characterEncoding=utf8&allowMultiQueries=true
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: root
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    timeout: 50000
+    pool:
+      # 连接池中的最大空闲连接
+      max-idle: 100
+      # 连接池最大阻塞等待时间（使用负值表示没有限制）
+      max-wait: -1
+      #最小能够保持idel状态的对象数
+      min-idle: 50
+      # 连接池最大连接数（使用负值表示没有限制）
+      max-active: 200
+mybatis:
+  mapper-locations: classpath:/mapper/*Mapper.xml
+thread:
+  CORE_POOL_SIZE: 20
+  MAX_POOL_SIZE: 100
+  QUEUE_CAPACITY: 30
+lyy:
+  myConfig:
+  switchConfig:
+  entryCode: A059
+  exitCode: O008
+  entryCodePer: A095
+  exitCodePer: O010
+json:
+  class-type: fastjson
+security:
+  user:
+    password: lyy
+    name: lyy
+  basic:
+    enabled: false

@@ -1,0 +1,270 @@
+
+UPDATE user_info
+
+<choose>
+	<when
+		test="(beans==null or beans.length &lt; 1) or (key == null and key == '')">
+		<set>
+			`id`=`id`,
+			`key`=`key`,
+			`username`=`username`,
+			`password`=`password`,
+			`sex`=`sex`
+		</set>
+		LIMIT 0
+	</when>
+
+	<otherwise>
+		<set>
+			<choose>
+				<when test="'true'=='false'">
+					`id` =
+					<choose>
+						<when test="key == 'id'">
+							<foreach collection="beans" item="bean" index="index"
+								separator=" " open="case `id`" close="end">
+								when #{bean.id} then
+								<choose>
+									<when test="bean.id != null and bean.id !='' ">
+										#{bean.id}
+									</when>
+									<otherwise>
+										`id`
+									</otherwise>
+								</choose>
+							</foreach>
+						</when>
+						<otherwise>
+						</otherwise>
+					</choose>
+					<choose>
+						<when test="key == 'key'">
+							<foreach collection="beans" item="bean" index="index"
+								separator=" " open="case `key`" close="end">
+								when #{bean.key} then
+								<choose>
+									<when test="bean.id != null and bean.id !='' ">
+										#{bean.id}
+									</when>
+									<otherwise>
+										`id`
+									</otherwise>
+								</choose>
+							</foreach>
+						</when>
+						<otherwise>
+							`id`
+						</otherwise>
+					</choose>
+					,
+				</when>
+			</choose>
+			<choose>
+				<when test="'true'=='false'">
+					`key` =
+					<choose>
+						<when test="key == 'id'">
+							<foreach collection="beans" item="bean" index="index"
+								separator=" " open="case `id`" close="end">
+								when #{bean.id} then
+								<choose>
+									<when test="bean.key != null and bean.key !='' ">
+										#{bean.key}
+									</when>
+									<otherwise>
+										`key`
+									</otherwise>
+								</choose>
+							</foreach>
+						</when>
+						<otherwise>
+						</otherwise>
+					</choose>
+					<choose>
+						<when test="key == 'key'">
+							<foreach collection="beans" item="bean" index="index"
+								separator=" " open="case `key`" close="end">
+								when #{bean.key} then
+								<choose>
+									<when test="bean.key != null and bean.key !='' ">
+										#{bean.key}
+									</when>
+									<otherwise>
+										`key`
+									</otherwise>
+								</choose>
+							</foreach>
+						</when>
+						<otherwise>
+							`key`
+						</otherwise>
+					</choose>
+					,
+				</when>
+			</choose>
+			<choose>
+				<when test="'false'=='false'">
+					`username` =
+					<choose>
+						<when test="key == 'id'">
+							<foreach collection="beans" item="bean" index="index"
+								separator=" " open="case `id`" close="end">
+								when #{bean.id} then
+								<choose>
+									<when test="bean.username != null and bean.username !='' ">
+										#{bean.username}
+									</when>
+									<otherwise>
+										`username`
+									</otherwise>
+								</choose>
+							</foreach>
+						</when>
+						<otherwise>
+						</otherwise>
+					</choose>
+					<choose>
+						<when test="key == 'key'">
+							<foreach collection="beans" item="bean" index="index"
+								separator=" " open="case `key`" close="end">
+								when #{bean.key} then
+								<choose>
+									<when test="bean.username != null and bean.username !='' ">
+										#{bean.username}
+									</when>
+									<otherwise>
+										`username`
+									</otherwise>
+								</choose>
+							</foreach>
+						</when>
+						<otherwise>
+							`username`
+						</otherwise>
+					</choose>
+					,
+				</when>
+			</choose>
+			<choose>
+				<when test="'false'=='false'">
+					`password` =
+					<choose>
+						<when test="key == 'id'">
+							<foreach collection="beans" item="bean" index="index"
+								separator=" " open="case `id`" close="end">
+								when #{bean.id} then
+								<choose>
+									<when test="bean.password != null and bean.password !='' ">
+										#{bean.password}
+									</when>
+									<otherwise>
+										`password`
+									</otherwise>
+								</choose>
+							</foreach>
+						</when>
+						<otherwise>
+						</otherwise>
+					</choose>
+					<choose>
+						<when test="key == 'key'">
+							<foreach collection="beans" item="bean" index="index"
+								separator=" " open="case `key`" close="end">
+								when #{bean.key} then
+								<choose>
+									<when test="bean.password != null and bean.password !='' ">
+										#{bean.password}
+									</when>
+									<otherwise>
+										`password`
+									</otherwise>
+								</choose>
+							</foreach>
+						</when>
+						<otherwise>
+							`password`
+						</otherwise>
+					</choose>
+					,
+				</when>
+			</choose>
+			<choose>
+				<when test="'false'=='false'">
+					`sex` =
+					<choose>
+						<when test="key == 'id'">
+							<foreach collection="beans" item="bean" index="index"
+								separator=" " open="case `id`" close="end">
+								when #{bean.id} then
+								<choose>
+									<when test="bean.sex != null  ">
+										#{bean.sex}
+									</when>
+									<otherwise>
+										`sex`
+									</otherwise>
+								</choose>
+							</foreach>
+						</when>
+						<otherwise>
+						</otherwise>
+					</choose>
+					<choose>
+						<when test="key == 'key'">
+							<foreach collection="beans" item="bean" index="index"
+								separator=" " open="case `key`" close="end">
+								when #{bean.key} then
+								<choose>
+									<when test="bean.sex != null  ">
+										#{bean.sex}
+									</when>
+									<otherwise>
+										`sex`
+									</otherwise>
+								</choose>
+							</foreach>
+						</when>
+						<otherwise>
+							`sex`
+						</otherwise>
+					</choose>
+
+				</when>
+			</choose>
+		</set>
+		<where>
+			<if test="key == 'id'">
+				`id` IN
+				(
+				<foreach collection="beans" item="bean" index="index"
+					separator="," open="" close="">
+					#{bean.id}
+				</foreach>
+				)
+			</if>
+			<if test="key == 'key'">
+				`key` IN
+				(
+				<foreach collection="beans" item="bean" index="index"
+					separator="," open="" close="">
+					#{bean.key}
+				</foreach>
+				)
+			</if>
+		</where>
+
+		<choose>
+			<when test="key == 'id'">
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+		<choose>
+			<when test="key == 'key'">
+			</when>
+			<otherwise>
+				LIMIT 0
+			</otherwise>
+		</choose>
+	</otherwise>
+</choose>

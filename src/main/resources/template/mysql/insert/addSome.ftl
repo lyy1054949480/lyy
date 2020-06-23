@@ -1,0 +1,1 @@
+<#list dataSource as dataEntity>INSERT INTO ${tableName!} (<#list dataEntity.columnName as item>`${item!}`<#if item_has_next>,</#if></#list>) VALUES (<#list dataEntity.columnValue as item>${item!"NULL"}<#if item_has_next>,</#if></#list>);</#list>

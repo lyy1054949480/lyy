@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.lyy.mapper.BranchBasicRateMapper" >
+  <resultMap id="BaseResultMap" type="com.example.lyy.entity.BranchBasicRate" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="jt_branch_name" property="jtBranchName" jdbcType="VARCHAR" />
+    <result column="jt_branch_code" property="jtBranchCode" jdbcType="VARCHAR" />
+    <result column="scenic_type" property="scenicType" jdbcType="VARCHAR" />
+    <result column="basic_rate_type" property="basicRateType" jdbcType="VARCHAR" />
+    <result column="value_range" property="valueRange" jdbcType="VARCHAR" />
+    <result column="adjust_price" property="adjustPrice" jdbcType="VARCHAR" />
+    <result column="operator_code" property="operatorCode" jdbcType="VARCHAR" />
+    <result column="operator_name" property="operatorName" jdbcType="VARCHAR" />
+    <result column="add_time" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    id, jt_branch_name, jt_branch_code, scenic_type, basic_rate_type, value_range, adjust_price, 
+    operator_code, operator_name, add_time, update_time
+  </sql>
+</mapper>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.lyy.mapper.safetyErpInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.example.lyy.entity.safetyErpInfo" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <result column="erp_id" property="erpId" jdbcType="VARCHAR" />
+    <result column="credit code" property="creditCode" jdbcType="VARCHAR" />
+    <result column="erp_nature" property="erpNature" jdbcType="VARCHAR" />
+    <result column="erp_type" property="erpType" jdbcType="VARCHAR" />
+    <result column="erp_rank" property="erpRank" jdbcType="VARCHAR" />
+    <result column="scenic_spot_type" property="scenicSpotType" jdbcType="VARCHAR" />
+    <result column="annual_amount" property="annualAmount" jdbcType="VARCHAR" />
+    <result column="peak_period" property="peakPeriod" jdbcType="VARCHAR" />
+    <result column="peak_traffic" property="peakTraffic" jdbcType="VARCHAR" />
+    <result column="erp_capacity_day" property="erpCapacityDay" jdbcType="VARCHAR" />
+    <result column="erp_capacity_hour" property="erpCapacityHour" jdbcType="VARCHAR" />
+    <result column="client_type" property="clientType" jdbcType="VARCHAR" />
+    <result column="client_type_ratio" property="clientTypeRatio" jdbcType="VARCHAR" />
+    <result column="special_crowd" property="specialCrowd" jdbcType="VARCHAR" />
+    <result column="special_crowd_ratio" property="specialCrowdRatio" jdbcType="VARCHAR" />
+  </resultMap>
+</mapper>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.lyy.mapper.TFullpathElementDefMapper" >
+  <resultMap id="BaseResultMap" type="com.example.lyy.entity.TFullpathElementDef" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="json_item_path" property="jsonItemPath" jdbcType="VARCHAR" />
+    <result column="parent_path" property="parentPath" jdbcType="VARCHAR" />
+    <result column="col_type" property="colType" jdbcType="VARCHAR" />
+    <result column="value_type" property="valueType" jdbcType="VARCHAR" />
+    <result column="fullpath_element" property="fullpathElement" jdbcType="VARCHAR" />
+    <result column="introduce" property="introduce" jdbcType="VARCHAR" />
+    <result column="isMust" property="ismust" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    id, json_item_path, parent_path, col_type, value_type, fullpath_element, introduce, 
+    isMust
+  </sql>
+</mapper>

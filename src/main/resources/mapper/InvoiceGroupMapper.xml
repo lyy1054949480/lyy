@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.lyy.mapper.InvoiceGroupMapper" >
+  <resultMap id="BaseResultMap" type="com.example.lyy.entity.InvoiceGroup" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="user_code" property="userCode" jdbcType="VARCHAR" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="insurance_company_name" property="insuranceCompanyName" jdbcType="VARCHAR" />
+    <result column="insurance_company_code" property="insuranceCompanyCode" jdbcType="VARCHAR" />
+    <result column="app_start_date" property="appStartDate" jdbcType="TIMESTAMP" />
+    <result column="pol_start_date" property="polStartDate" jdbcType="TIMESTAMP" />
+    <result column="pol_end_date" property="polEndDate" jdbcType="TIMESTAMP" />
+    <result column="product_code" property="productCode" jdbcType="VARCHAR" />
+    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+    <result column="product_category1" property="productCategory1" jdbcType="VARCHAR" />
+    <result column="product_category2" property="productCategory2" jdbcType="VARCHAR" />
+    <result column="product_category3" property="productCategory3" jdbcType="VARCHAR" />
+    <result column="policy_no" property="policyNo" jdbcType="VARCHAR" />
+    <result column="app_code" property="appCode" jdbcType="VARCHAR" />
+    <result column="order_number" property="orderNumber" jdbcType="VARCHAR" />
+    <result column="premium" property="premium" jdbcType="DECIMAL" />
+    <result column="policy_status" property="policyStatus" jdbcType="VARCHAR" />
+    <result column="invoice_status" property="invoiceStatus" jdbcType="VARCHAR" />
+    <result column="taxpayer_no" property="taxpayerNo" jdbcType="VARCHAR" />
+    <result column="taxpayer_name" property="taxpayerName" jdbcType="VARCHAR" />
+    <result column="contact_name" property="contactName" jdbcType="VARCHAR" />
+    <result column="contact_phone" property="contactPhone" jdbcType="VARCHAR" />
+    <result column="vat_bank" property="vatBank" jdbcType="VARCHAR" />
+    <result column="vat_account" property="vatAccount" jdbcType="VARCHAR" />
+    <result column="vat_address" property="vatAddress" jdbcType="VARCHAR" />
+    <result column="vat_phone" property="vatPhone" jdbcType="VARCHAR" />
+    <result column="contact_email" property="contactEmail" jdbcType="VARCHAR" />
+    <result column="if_code" property="ifCode" jdbcType="VARCHAR" />
+    <result column="if_merge" property="ifMerge" jdbcType="VARCHAR" />
+    <result column="branch_code" property="branchCode" jdbcType="VARCHAR" />
+    <result column="branch_name" property="branchName" jdbcType="VARCHAR" />
+    <result column="travel_team" property="travelTeam" jdbcType="VARCHAR" />
+    <result column="travel_no" property="travelNo" jdbcType="INTEGER" />
+    <result column="channel" property="channel" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    id, user_code, user_name, insurance_company_name, insurance_company_code, app_start_date, 
+    pol_start_date, pol_end_date, product_code, product_name, product_category1, product_category2, 
+    product_category3, policy_no, app_code, order_number, premium, policy_status, invoice_status, 
+    taxpayer_no, taxpayer_name, contact_name, contact_phone, vat_bank, vat_account, vat_address, 
+    vat_phone, contact_email, if_code, if_merge, branch_code, branch_name, travel_team, 
+    travel_no, channel
+  </sql>
+</mapper>

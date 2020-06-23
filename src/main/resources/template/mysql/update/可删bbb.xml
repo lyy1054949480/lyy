@@ -1,0 +1,158 @@
+
+UPDATE user_info
+
+<choose>
+	<when
+		test="(beans==null or beans.length &lt; 1) or (key == null and key == '')">
+		<set>
+			`id`=`id`,
+			`key`=`key`,
+			`username`=`username`,
+			`password`=`password`,
+			`sex`=`sex`
+		</set>
+		LIMIT 0
+	</when>
+
+	<otherwise>
+		<set>
+			<choose>
+				<when test="key == 'id'">
+					`password` =
+					<foreach collection="beans" item="bean" index="index"
+						separator=" " open="case `id`" close="end">
+						when
+						#{bean.id}
+						then
+						<choose>
+							<when test="bean.password != null and bean.password !='' ">
+								#{bean.password}
+							</when>
+							<otherwise>
+								`password`
+							</otherwise>
+						</choose>
+					</foreach>
+					,
+					`username` =
+					<foreach collection="beans" item="bean" index="index"
+						separator=" " open="case `id`" close="end">
+						when
+						#{bean.id}
+						then
+						<choose>
+							<when test="bean.username != null and bean.username !='' ">
+								#{bean.username}
+							</when>
+							<otherwise>
+								`username`
+							</otherwise>
+						</choose>
+					</foreach>
+					,
+					`sex` =
+					<foreach collection="beans" item="bean" index="index"
+						separator=" " open="case `id`" close="end">
+						when
+						#{bean.id}
+						then
+						<choose>
+							<when test="bean.sex != null  ">
+								#{bean.sex}
+							</when>
+							<otherwise>
+								`sex`
+							</otherwise>
+						</choose>
+					</foreach>
+
+				</when>
+				<when test="key == 'key'">
+					`password` =
+					<foreach collection="beans" item="bean" index="index"
+						separator=" " open="case `key`" close="end">
+						when
+						#{bean.key}
+						then
+						<choose>
+							<when test="bean.password != null and bean.password !='' ">
+								#{bean.password}
+							</when>
+							<otherwise>
+								`password`
+							</otherwise>
+						</choose>
+					</foreach>
+					,
+					`username` =
+					<foreach collection="beans" item="bean" index="index"
+						separator=" " open="case `key`" close="end">
+						when
+						#{bean.key}
+						then
+						<choose>
+							<when test="bean.username != null and bean.username !='' ">
+								#{bean.username}
+							</when>
+							<otherwise>
+								`username`
+							</otherwise>
+						</choose>
+					</foreach>
+					,
+					`sex` =
+					<foreach collection="beans" item="bean" index="index"
+						separator=" " open="case `key`" close="end">
+						when
+						#{bean.key}
+						then
+						<choose>
+							<when test="bean.sex != null  ">
+								#{bean.sex}
+							</when>
+							<otherwise>
+								`sex`
+							</otherwise>
+						</choose>
+					</foreach>
+
+				</when>
+
+				<otherwise>
+					`id`=`id`
+				</otherwise>
+			</choose>
+		</set>
+
+		<where>
+			<if test="key == 'id'">
+				`id` IN
+				(
+				<foreach collection="beans" item="bean" index="index"
+					separator="," open="" close="">
+					#{bean.id}
+				</foreach>
+				)
+			</if>
+			<if test="key == 'key'">
+				`key` IN
+				(
+				<foreach collection="beans" item="bean" index="index"
+					separator="," open="" close="">
+					#{bean.key}
+				</foreach>
+				)
+			</if>
+		</where>
+
+		<choose>
+			<when test="key == 'id'">
+			</when>
+			<when test="key == 'key'">
+			</when>
+			<otherwise>
+				LIMIT 0
+			</otherwise>
+		</choose>
+	</otherwise>
+</choose>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.lyy.mapper.BranchAreaCompensateRateMapper" >
+  <resultMap id="BaseResultMap" type="com.example.lyy.entity.BranchAreaCompensateRate" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="jt_branch_code" property="jtBranchCode" jdbcType="VARCHAR" />
+    <result column="jt_branch_name" property="jtBranchName" jdbcType="VARCHAR" />
+    <result column="area_code" property="areaCode" jdbcType="VARCHAR" />
+    <result column="factor_type" property="factorType" jdbcType="VARCHAR" />
+    <result column="value_range" property="valueRange" jdbcType="VARCHAR" />
+    <result column="adjust_price" property="adjustPrice" jdbcType="VARCHAR" />
+    <result column="coefficient" property="coefficient" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    id, jt_branch_code, jt_branch_name, area_code, factor_type, value_range, adjust_price, 
+    coefficient
+  </sql>
+</mapper>
