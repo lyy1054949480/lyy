@@ -1,8 +1,16 @@
 package com.example.lyy.demo;
 
+import com.example.lyy.util.invoke.IntrospectorUtil;
 import com.google.common.base.Converter;
+import io.swagger.annotations.ApiModel;
 import org.apache.commons.io.FileUtils;
+import org.springframework.aop.IntroductionInfo;
+import org.springframework.beans.BeanInfoFactory;
+import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.util.ReflectionUtils;
 
+import java.beans.BeanInfo;
+import java.beans.Introspector;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -19,5 +27,10 @@ public class Test4 {
 //            FileUtils.copyURLToFile(new URL(url),new File("E:\\image\\"+ i + ".jpg"));
 //            i++;
 //        }
+    }
+
+    public void testSpringUtils(){
+        AnnotationUtils.findAnnotation(this.getClass(),ApiModel.class);
+        ReflectionUtils.findField(this.getClass(),"name");
     }
 }
