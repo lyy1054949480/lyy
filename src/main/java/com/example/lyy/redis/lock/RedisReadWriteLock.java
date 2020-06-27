@@ -3,6 +3,13 @@ package com.example.lyy.redis.lock;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * 读锁可以被多个线程获取，同一个线程可以重入读锁，
+ * 如果获取读锁的时候存在写锁，则需要等待写锁被释放才能获取；
+ * 写锁的获取的时候，若存在读锁，则需要等待所有的读锁释放之后才能被获取，
+ * 如果有线程正在获取写锁，其他获取读锁的线程将等待写锁被获取并释放之后才能获取读锁，
+ * 写锁只能被一个线程持有
+ */
 public class RedisReadWriteLock {
     //读锁
     private static volatile RedisReadLock redisReadLock;
