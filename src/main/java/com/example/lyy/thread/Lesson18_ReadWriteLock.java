@@ -21,7 +21,7 @@ public class Lesson18_ReadWriteLock {
     public void handleRead(Lock lock) throws InterruptedException{
         try {
             lock.lock();
-            System.out.println(Thread.currentThread().getName() + "进入了线程\n");
+            System.out.println(Thread.currentThread().getName() + "读");
             Thread.sleep(1000);
             System.out.println(value);
         } finally {
@@ -34,12 +34,12 @@ public class Lesson18_ReadWriteLock {
     public void handleWrite(Lock lock, int index) throws InterruptedException{
         try {
             lock.lock();
-            System.out.println(Thread.currentThread().getName() + "进入了线程");
+            System.out.println(Thread.currentThread().getName() + "写");
             Thread.sleep(3000);
             value = index;
-            System.out.println("共享资源修改之后： "+value);
+            System.out.println("写后value： "+value);
         } finally {
-            lock.unlock();
+//            lock.unlock();
         }
     }
 
