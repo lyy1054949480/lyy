@@ -31,12 +31,13 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Aspect
 @Component
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class RateLimiterAspect {
     private final static String SEPARATOR = ":";
     private final static String REDIS_LIMIT_KEY_PREFIX = "limit:";
-    private final StringRedisTemplate stringRedisTemplate;
-    private final RedisScript<Long> limitRedisScript;
+    @Autowired
+    private  StringRedisTemplate stringRedisTemplate;
+    @Autowired
+    private  RedisScript<Long> limitRedisScript;
 
     @Pointcut("@annotation(com.example.lyy.limit.RateLimiter)")
     public void rateLimit() {

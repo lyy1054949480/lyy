@@ -10,10 +10,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-//@CacheConfig()
+@CacheConfig()
 public interface TLogMapper extends MyMapper<TLog>{
 
-//    @Cacheable(cacheNames = "users",key = "#root.method.name+'.'+#root.methodName+':'+#root.args[0].getProductCode()",sync = true)
+    @Cacheable(cacheNames = "users",key = "#root.method.name+'.'+#root.methodName+':'+#root.args[0].getProductCode()",sync = true)
 //    @Cacheable(cacheNames = "test",keyGenerator = "myKeyGenerator")
     TLog selectLog(TLog tlog);
 

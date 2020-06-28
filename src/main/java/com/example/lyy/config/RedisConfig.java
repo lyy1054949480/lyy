@@ -2,6 +2,8 @@ package com.example.lyy.config;
 
 import com.alibaba.fastjson.support.spring.FastJsonRedisSerializer;
 import com.example.lyy.redis.MyFastJsonRedisSerializer;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
@@ -21,6 +23,8 @@ import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.scripting.support.ResourceScriptSource;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPoolConfig;
 
 @Configuration
 @ConditionalOnClass(RedisOperations.class)
@@ -28,6 +32,34 @@ import org.springframework.scripting.support.ResourceScriptSource;
 @EnableCaching
 public class RedisConfig {
 
+    @Value("${spring.redis.host}")
+    private String host;
+
+    @Value("${spring.redis.port}")
+    private int port;
+
+    @Value("${spring.redis.timeout}")
+    private String timeout;
+
+    @Value("${spring.redis.pool.max-idle}")
+    private int maxIdle;
+
+    @Value("${spring.redis.pool.max-wait}")
+    private String maxWaitMillis;
+
+    @Value("${spring.redis.database}")
+    private int database;
+
+
+
+    @Bean
+    public JedisPool redisPoolFactory() {
+        JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
+        jedisPoolConfig.setMaxIdle(maxIdle);
+        jedisPoolConfig.setMaxWaitMillis(Long.valueOf(maxWaitMillis.substring(0,maxWaitMillis.length()-2)));
+        Integer timeout = Integer.valueOf(this.timeout.substring(0, this.timeout.length() - 2));
+        return new JedisPool(jedisPoolConfig, host, port, timeout, null, database);
+    }
 
     @Bean
     @SuppressWarnings("unchecked")
