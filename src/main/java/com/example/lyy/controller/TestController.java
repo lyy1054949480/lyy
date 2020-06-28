@@ -10,6 +10,7 @@ import com.example.lyy.domain.ResponseCode;
 import com.example.lyy.domain.ResponseData;
 import com.example.lyy.entity.*;
 import com.example.lyy.limit.RateLimiter;
+import com.example.lyy.mapper.TLogMapper;
 import com.example.lyy.mapper.TOrderMapper;
 import com.example.lyy.mapper.TUserMapper;
 import com.example.lyy.merge.templateSql.EntityClass;
@@ -60,6 +61,9 @@ import java.util.concurrent.*;
 @Slf4j
 @EnableTransactionManagement
 public class TestController {
+
+    @Autowired
+    TLogMapper tLogMapper;
 
 
     @Autowired
@@ -135,9 +139,7 @@ public class TestController {
 //        TUser aaaa = TUser.builder().name("aaaa").build();
 //        Boolean lyy970120 = redisTemplate.opsForValue().setIfAbsent("lyy", "lyy970120");
 //        template.opsForHash().put("my",aaaa.getName(),aaaa);
-//        TUser tUser = new TUser();
-//        tUser.setName(name);
-//        redisLock.setIfAbsent("lyy",tUser,10);
+
 //        stringRedisTemplate.opsForValue().set("lyy2","hahahha",20,TimeUnit.SECONDS);
         String authorization = request.getHeader("Authorization");
         System.out.println(authorization);
@@ -514,6 +516,37 @@ public class TestController {
 //        System.out.println(name);
 
     }
+
+    @ApiOperation(value = "testRedis", notes = "")
+    @PostMapping(value = "testRedis")
+    @ResponseBody
+    @ApiResponses({ @ApiResponse(code = 200, response = String.class, message = "--") })
+    public void testRedis(String s) throws Exception {
+        if ("1".equals(s)){
+            TUser tUser = new TUser();
+            tUser.setName("aaaaaa");
+            redisLock.setIfAbsent("lyy",tUser,100);
+        }else if ("2".equals(s)){
+            redisTemplate.opsForValue().set("key","value",100L,TimeUnit.SECONDS);
+        }else if ("3".equals(s)){
+            redisTemplate.opsForValue().setIfAbsent("key","value");
+        }
+
+    }
+
+
+    @ApiOperation(value = "testRedisCache", notes = "")
+    @PostMapping(value = "testRedisCache")
+    @ResponseBody
+    @ApiResponses({ @ApiResponse(code = 200, response = String.class, message = "--") })
+    public void testRedisCache() throws Exception {
+        TLog tLog = tLogMapper.selectLog(TLog.builder().productCode("22222222").build());
+        System.out.println(tLog);
+    }
+
+
+
+
 
     @GetMapping("/index")
     public ModelAndView  index(){
