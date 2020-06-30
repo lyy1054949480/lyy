@@ -1,49 +1,74 @@
-/*
 package com.example.lyy.oauth2.config;
 
+import com.example.lyy.oauth2.access.CustomAccessDecisionManager;
+import com.example.lyy.oauth2.access.CustomSecurityMetadataSource;
+import com.example.lyy.oauth2.security.JwtFilter;
+import com.example.lyy.oauth2.security.JwtLoginFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
+import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
 @Configuration
 public class MyWebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    */
-/*@Override
-    public void configure(HttpSecurity http) throws Exception {
-        http    // 配置登陆页/login并允许访问
-                .formLogin().permitAll()
-
-                //test需要认证
-                .and().authorizeRequests().antMatchers("/test").authenticated()
-
-                // 登出页
-                .and().logout().logoutUrl("/logout").logoutSuccessUrl("/")
-                // 其余所有请求全部需要鉴权认证
-                //.and().authorizeRequests().anyRequest().authenticated()
-                // 由于使用的是JWT，我们这里不需要csrf
-                //禁用跨站伪造
-                .and().csrf().disable();
-    }*//*
-
-    //认证管理器
     @Bean
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
+    PasswordEncoder passwordEncoder() {
+        return NoOpPasswordEncoder.getInstance();
     }
-    //密码编码器
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.inMemoryAuthentication().withUser("admin")
+                .password("123").roles("admin")
+                .and()
+                .withUser("sang")
+                .password("456")
+                .roles("10");
+    }
+
+    @Override//http访问的安全配置
+    public void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests()
+                .antMatchers("/v2/api-docs","/swagger-resources/configuration/ui",
+                        "/swagger-resources", "/swagger-resources/configuration/security",
+                        "/swagger-ui.html","/webjars/**","/login").permitAll()
+                .and()
+                .authorizeRequests()
+                .anyRequest()
+                .authenticated()
+                .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
+                    public <O extends FilterSecurityInterceptor> O postProcess(O fsi) {
+                        fsi.setAccessDecisionManager(accessDecisionManager());
+                        fsi.setSecurityMetadataSource(securityMetadataSource());
+                        return fsi;
+                    }
+                })
+                .and()
+                .addFilterBefore(new JwtLoginFilter("/login",authenticationManager()), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtFilter(),UsernamePasswordAuthenticationFilter.class)
+                .csrf().disable();
+    }
+
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    public AccessDecisionManager accessDecisionManager() {
+        return new CustomAccessDecisionManager();
+    }
+
+    @Bean
+    public FilterInvocationSecurityMetadataSource securityMetadataSource() {
+        return new CustomSecurityMetadataSource();
     }
 
 }
 
-*/
