@@ -116,7 +116,7 @@ public class QRBarCodeUtil {
              *
              * 即将保存的二维码图片文件*/
             File codeImgFile = new File(codeImgFileSaveDir, fileName);
-            ImageIO.write(bufferedImage, "png", codeImgFile);
+            ImageIO.write(bufferedImage,"jpg", codeImgFile);
  
             System.out.println("二维码图片生成成功：" + codeImgFile.getPath());
         } catch (Exception e) {
@@ -287,12 +287,13 @@ public class QRBarCodeUtil {
     }
  
     public static void main(String[] args) throws MalformedURLException {
-        File localFile = new File("E:\\logs\\1.png");
-        String localQRcodeContent = parseQRCodeByFile(localFile);
-        System.out.println(localFile + " 二维码内容：" + localQRcodeContent);
- 
-        URL url = new URL("https://res.wx.qq.com/mpres/htmledition/images/mp_qrcode3a7b38.gif");
-        String netQRcodeContent = parseQRCodeByUrl(url);
-        System.out.println(url + " 二维码内容：" + netQRcodeContent);
+//        File localFile = new File("E:\\logs\\1.png");
+//        String localQRcodeContent = parseQRCodeByFile(localFile);
+//        System.out.println(localFile + " 二维码内容：" + localQRcodeContent);
+//
+//        URL url = new URL("https://res.wx.qq.com/mpres/htmledition/images/mp_qrcode3a7b38.gif");
+//        String netQRcodeContent = parseQRCodeByUrl(url);
+//        System.out.println(url + " 二维码内容：" + netQRcodeContent);
+        createCodeToFile("11111111111111",null,"123.jpg");
     }
 }
