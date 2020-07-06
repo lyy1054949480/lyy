@@ -6,6 +6,8 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.*;
 import java.net.URL;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -50,6 +52,20 @@ public class Test5 {
 
         //查找给定目录中的文件(以及可选的目录子目录)。所有找到的文件都由IOFileFilter过滤。
         //FileUtils.listFilesAndDirs();
+
+
+        //java8  bug
+//        List<String> list = Arrays.asList("111");
+//        Object[] objects = list.toArray();
+//        objects[0] = new Object();
+
+
+        List<String> list2 = new ArrayList<>();
+        list2.add("111");
+        Object[] objects2 = list2.toArray();
+        objects2[0] = 1;
+
+
         //解压缩
 
     }
