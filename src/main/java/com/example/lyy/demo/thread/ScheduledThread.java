@@ -7,6 +7,10 @@ import java.util.concurrent.*;
 
 /**
  * 创建一个定长线程池，支持定时及周期性任务执行。延迟执行示例代码如下：
+ * DelayedWorkQueue 它可以保证每次出队的任务都是当前队列中执行时间最靠前的，
+ * 由于它是基于堆结构的队列，堆结构在执行插入和删除操作时的最坏时间复杂度是 O(logN)。
+ * DelayedWorkQueue是基于堆的数据结构，按照时间顺序将每个任务进行排序，
+ * 将待执行时间越近的任务放在在队列的队头位置，以便于最先进行执行。
  */
 public class ScheduledThread {
 
@@ -20,10 +24,11 @@ public class ScheduledThread {
 //        ((ThreadPoolExecutor)EXECUTOR_SERVICE).setCorePoolSize(20);
 //        System.out.println(((ThreadPoolExecutor) EXECUTOR_SERVICE).getCorePoolSize());
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 5; i++) {
             ScheduledFuture<?> scheduledFuture = EXECUTOR_SERVICE.scheduleAtFixedRate(() -> createCode("1"), 0, 3, TimeUnit.MILLISECONDS);//// 循环任务，按照上一次任务的发起时间计算下一次任务的开始时间
 
         }
+        System.out.println(EXECUTOR_SERVICE);
         //ScheduledFuture<?> scheduledFuture = EXECUTOR_SERVICE.scheduleAtFixedRate(() -> createCode("1"), 0, 3, TimeUnit.SECONDS);//// 循环任务，按照上一次任务的发起时间计算下一次任务的开始时间
 //        Object o = scheduledFuture.get();
 //        System.out.println(o);

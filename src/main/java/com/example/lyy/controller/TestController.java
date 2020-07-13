@@ -9,6 +9,7 @@ import com.example.lyy.domain.PromptingMessageEnum;
 import com.example.lyy.domain.ResponseCode;
 import com.example.lyy.domain.ResponseData;
 import com.example.lyy.entity.*;
+import com.example.lyy.influxDb.InfluxDBConnect;
 import com.example.lyy.limit.RateLimiter;
 import com.example.lyy.mapper.TLogMapper;
 import com.example.lyy.mapper.TOrderMapper;
@@ -32,6 +33,8 @@ import com.example.lyy.util.redis.RedisLock;
 import io.jsonwebtoken.Claims;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
+import org.influxdb.InfluxDB;
+import org.influxdb.dto.Point;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -48,6 +51,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.*;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -90,6 +94,9 @@ public class TestController {
     @Autowired
     private RedisLock redisLock;
 
+    @Resource
+    InfluxDBConnect influxDBConnect;
+
     @Value("${lyy.entryCode}")
     private String entryCode;
 
@@ -101,6 +108,9 @@ public class TestController {
 
     @Value("${lyy.exitCodePer}")
     private String exitCodePer;
+
+    @Value("${prop.fileStorePath}")
+    private String path;
 
     @Autowired
     TUserMapper tUserMapper;
@@ -607,6 +617,33 @@ public class TestController {
     public void testRateLimit(){
         System.out.println("testRateLimit");
     }
+
+
+
+    @PostMapping("/testInfluxDb")
+    @ApiResponses({ @ApiResponse(code = 200, response = String.class, message = "--") })
+    @ResponseBody
+    public void testInfluxDb(){
+        Map<String, String> tagsMap = new HashMap<>();
+        Map<String, Object> fieldsMap = new HashMap<>();
+        System.out.println("influxDB start time :" + System.currentTimeMillis());
+        int i = 0;
+        for (int j = 0; j < 10000; j++) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            tagsMap.put("user_id", String.valueOf(i % 10));
+            tagsMap.put("url", "http://www.baidu.com");
+            tagsMap.put("service_method", "testInsert" + (i % 5));
+            fieldsMap.put("count", i % 5);
+            influxDBConnect.insert("influxdb", tagsMap, fieldsMap);
+            i++;
+
+        }
+    }
+
 
 }
 
