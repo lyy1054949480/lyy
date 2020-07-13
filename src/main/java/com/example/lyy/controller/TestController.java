@@ -38,8 +38,10 @@ import org.influxdb.dto.Point;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.connection.RedisConnection;
+import org.springframework.data.redis.connection.StringRedisConnection;
+import org.springframework.data.redis.core.*;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -618,6 +620,38 @@ public class TestController {
         System.out.println("testRateLimit");
     }
 
+
+    @GetMapping("/testRedisExecute")
+    @ApiResponses({ @ApiResponse(code = 200, response = String.class, message = "--") })
+    @ResponseBody
+    public void testRedisExecute() {
+        Set<Object> execute = stringRedisTemplate.execute(new RedisCallback<Set<Object>>() {
+            @Override
+            public Set<Object> doInRedis(RedisConnection connection) throws DataAccessException {
+
+                Set<Object> binaryKeys = new HashSet<>();
+
+                Cursor<byte[]> cursor = connection.scan(new ScanOptions.ScanOptionsBuilder().match("*").count(1000).build());
+                while (cursor.hasNext()) {
+                    binaryKeys.add(new String(cursor.next()));
+                }
+                System.out.println(JSON.toJSONString(binaryKeys));
+                return binaryKeys;
+            }
+        });
+        System.out.println(JSON.toJSONString(execute));
+        List<Object> redisResult = stringRedisTemplate.executePipelined(new RedisCallback<String>() {
+            @Override
+            public String doInRedis(RedisConnection redisConnection) throws DataAccessException {
+                for (Object o : execute) {
+                    StringRedisConnection stringRedisConnection =(StringRedisConnection)redisConnection;
+                    stringRedisConnection.del((String)o);
+                }
+                return null;
+            }
+        });
+
+    }
 
 
     @PostMapping("/testInfluxDb")
