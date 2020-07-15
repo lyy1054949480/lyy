@@ -42,6 +42,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.StringRedisConnection;
 import org.springframework.data.redis.core.*;
+import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -573,11 +574,13 @@ public class TestController {
     @ApiResponses({ @ApiResponse(code = 200, response = String.class, message = "--") })
     @MyRejectedPolicy("runTest")
     /**
-     * CountDownLatch.countDown 返回 future有可能并未执行完，future.get会阻塞线程，导致一直等待执行结果
+     * Future与CountDownLatch不能同时使用，Future的get方法也会阻塞，
+     * return new AsyncResult<>(String.valueOf(i))不一定会执行，excute.countDown()先执行，
+     * 当countDown解锁，return可能还未执行，调用get方法拿不到执行结果就会被阻塞。
      */
     public void thread(Integer i) throws Exception {
         final CountDownLatch switchLatch = new CountDownLatch(1);
-        final CountDownLatch latch = new CountDownLatch(1);
+        final CountDownLatch latch = new CountDownLatch(3);
 //        runTask.setSwitchLatch(switchLatch);
 //        runTask.setExecuteLatch(latch);
         Future<String> stringFuture =  runTask.runTest(i, switchLatch, latch);
@@ -587,24 +590,34 @@ public class TestController {
         switchLatch.countDown();
         try {
             latch.await();
+            System.out.println("解锁");
         } catch (Exception e) {
             e.printStackTrace();
         }
+//
+//        if(stringFuture.isDone()){
+//            System.out.println("execute.......");
+//        }
+//        if(stringFuture1.isDone()){
+//            System.out.println("execute1.......");
+//        }
+//        if(stringFuture2.isDone()){
+//            System.out.println("execute2.......");
+//        }
 
-        while(!stringFuture.isDone()){
-            System.out.println("execute.......");
-        }
-        while(!stringFuture1.isDone()){
-            System.out.println("execute1.......");
-        }
-        while(!stringFuture2.isDone()){
-            System.out.println("execute2.......");
-        }
 
-
-        System.out.println(stringFuture.get());
-        System.out.println(stringFuture1.get());
-        System.out.println(stringFuture2.get());
+//        System.out.println("1====="+stringFuture.get());
+//        System.out.println("2====="+stringFuture1.get());
+//        System.out.println("3====="+stringFuture2.get());
+        /**
+         * 1=====1   stringFuture  sleep 10s
+         * 2=====1   stringFuture2  sleep 5s
+         * 3=====1   stringFuture3  sleep 3s
+         * 打印结果
+         * System.out.println("1====="+stringFuture.get())会一直阻塞等待任务执行完毕 即使后面的执行完了
+         *
+         *
+         */
 //        System.out.println(stringFuture3.get());
 
 
@@ -625,13 +638,42 @@ public class TestController {
     @ApiResponses({ @ApiResponse(code = 200, response = String.class, message = "--") })
     @ResponseBody
     public void testRedisExecute() {
+        ScanOptions options = ScanOptions.scanOptions()
+                .count(100)
+                .match("*").build();
+        Cursor cursor = (Cursor) stringRedisTemplate.executeWithStickyConnection(redisConnection -> new ConvertingCursor<>(redisConnection.scan(options), stringRedisTemplate.getKeySerializer()::deserialize));
+
+//
+//        stringRedisTemplate.execute(new SessionCallback<Set<Object>>() {
+//            @Override
+//            public Set<Object> execute(RedisOperations redisOperations) throws DataAccessException {
+//
+//                return null;
+//            }
+//        });
+
         Set<Object> execute = stringRedisTemplate.execute(new RedisCallback<Set<Object>>() {
             @Override
             public Set<Object> doInRedis(RedisConnection connection) throws DataAccessException {
 
                 Set<Object> binaryKeys = new HashSet<>();
 
-                Cursor<byte[]> cursor = connection.scan(new ScanOptions.ScanOptionsBuilder().match("*").count(1000).build());
+                Cursor<byte[]> cursor = connection.scan(new ScanOptions.ScanOptionsBuilder().match("ins-svc:variable*").count(1000).build());
+                while (cursor.hasNext()) {
+                    binaryKeys.add(new String(cursor.next()));
+                }
+                System.out.println(JSON.toJSONString(binaryKeys));
+                return binaryKeys;
+            }
+        });
+
+        Object execute1 = redisTemplate.opsForValue().getOperations().execute(new RedisCallback<Set<Object>>() {
+            @Override
+            public Set<Object> doInRedis(RedisConnection connection) throws DataAccessException {
+
+                Set<Object> binaryKeys = new HashSet<>();
+
+                Cursor<byte[]> cursor = connection.scan(new ScanOptions.ScanOptionsBuilder().match("ins-svc:variable*").count(1000).build());
                 while (cursor.hasNext()) {
                     binaryKeys.add(new String(cursor.next()));
                 }
@@ -640,16 +682,18 @@ public class TestController {
             }
         });
         System.out.println(JSON.toJSONString(execute));
-        List<Object> redisResult = stringRedisTemplate.executePipelined(new RedisCallback<String>() {
-            @Override
-            public String doInRedis(RedisConnection redisConnection) throws DataAccessException {
-                for (Object o : execute) {
-                    StringRedisConnection stringRedisConnection =(StringRedisConnection)redisConnection;
-                    stringRedisConnection.del((String)o);
-                }
-                return null;
-            }
-        });
+        System.out.println(JSON.toJSONString(execute1));
+
+        //        List<Object> redisResult = stringRedisTemplate.executePipelined(new RedisCallback<String>() {
+//            @Override
+//            public String doInRedis(RedisConnection redisConnection) throws DataAccessException {
+//                for (Object o : execute) {
+//                    StringRedisConnection stringRedisConnection =(StringRedisConnection)redisConnection;
+//                    stringRedisConnection.del((String)o);
+//                }
+//                return null;
+//            }
+//        });
 
     }
 
@@ -661,17 +705,19 @@ public class TestController {
         Map<String, String> tagsMap = new HashMap<>();
         Map<String, Object> fieldsMap = new HashMap<>();
         System.out.println("influxDB start time :" + System.currentTimeMillis());
+        Random random = new Random();
         int i = 0;
         for (int j = 0; j < 10000; j++) {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            int anInt = random.nextInt(5);
+//            try {
+//                Thread.sleep(100);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
             tagsMap.put("user_id", String.valueOf(i % 10));
             tagsMap.put("url", "http://www.baidu.com");
-            tagsMap.put("service_method", "testInsert" + (i % 5));
-            fieldsMap.put("count", i % 5);
+            tagsMap.put("service_method", "testInsert" + anInt);
+            fieldsMap.put("count", anInt);
             influxDBConnect.insert("influxdb", tagsMap, fieldsMap);
             i++;
 
