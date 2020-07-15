@@ -37,6 +37,7 @@ public class RunTask {
         begin.await();
         try {
             execute(i,begin,excute);
+            Thread.sleep(3000);
             return new AsyncResult<>(String.valueOf(i));
         }catch (Exception e){
             return new AsyncResult<>(String.valueOf(0));
@@ -52,6 +53,7 @@ public class RunTask {
         begin.await();
         try {
             execute(i,begin,excute);
+            Thread.sleep(500);
             return new AsyncResult<>(String.valueOf(i));
         }catch (Exception e){
             return new AsyncResult<>(String.valueOf(0));
@@ -66,6 +68,7 @@ public class RunTask {
         begin.await();
         try {
             execute(i,begin,excute);
+            Thread.sleep(800);
             return new AsyncResult<>(String.valueOf(i));
         }catch (Exception e){
             return new AsyncResult<>(String.valueOf(0));
