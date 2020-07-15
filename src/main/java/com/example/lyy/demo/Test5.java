@@ -2,6 +2,7 @@ package com.example.lyy.demo;
 
 import com.alibaba.fastjson.JSON;
 import com.example.lyy.util.auxiliary.FileUtil;
+import com.google.common.io.Files;
 import org.apache.commons.io.FileUtils;
 
 import java.io.*;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
@@ -65,8 +67,25 @@ public class Test5 {
         Object[] objects2 = list2.toArray();
         objects2[0] = 1;
 
+        AtomicInteger atomicInteger = new AtomicInteger(10);
+        for (int i = 0; i < 5; i++) {
+            try {
+                if(atomicInteger.incrementAndGet() > 10) {
+                    System.out.println("--------------limit");
+                    //熔断逻辑    } else {
+                    //处理逻辑
+                }
+            } finally {
+                atomicInteger.decrementAndGet();
+            }
+
+        }
+
 
         //解压缩
 
     }
+
+
+
 }
