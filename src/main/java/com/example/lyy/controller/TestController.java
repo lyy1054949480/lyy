@@ -16,6 +16,7 @@ import com.example.lyy.mapper.TOrderMapper;
 import com.example.lyy.mapper.TUserMapper;
 import com.example.lyy.merge.templateSql.EntityClass;
 import com.example.lyy.mq.RabbitSender;
+import com.example.lyy.redis.redssionLock.RedissLockUtil;
 import com.example.lyy.service.JsonService;
 import com.example.lyy.service.TestService;
 import com.example.lyy.thread.ExecutorConfig;
@@ -33,16 +34,12 @@ import com.example.lyy.util.redis.RedisLock;
 import io.jsonwebtoken.Claims;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
-import org.influxdb.InfluxDB;
-import org.influxdb.dto.Point;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
-import org.springframework.data.redis.connection.StringRedisConnection;
 import org.springframework.data.redis.core.*;
-import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -58,9 +55,11 @@ import javax.validation.Valid;
 import java.io.*;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.*;
+import java.util.concurrent.locks.Lock;
 
 @Controller
 @RequestMapping("test")
@@ -68,6 +67,9 @@ import java.util.concurrent.*;
 @Slf4j
 @EnableTransactionManagement
 public class TestController {
+
+//    @Autowired
+//    RedisLockRegistry redisLockRegistry;
 
     @Autowired
     TLogMapper tLogMapper;
@@ -722,6 +724,36 @@ public class TestController {
             i++;
 
         }
+    }
+
+
+    @GetMapping("/testRedisLock")
+    @ApiResponses({ @ApiResponse(code = 200, response = String.class, message = "--") })
+    @ResponseBody
+    public void testRedisLock(String name){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+
+                RedissLockUtil.lock(name+"_lock", TimeUnit.MINUTES, 10);
+
+                System.out.println(simpleDateFormat.format(new Date())+" "+name+" begin...");
+                for (int i = 0; i < 20; i++) {
+                    try {
+                        Thread.sleep(1000);
+                        System.out.println(simpleDateFormat.format(new Date())+" "+name+" "+i);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                System.out.println(simpleDateFormat.format(new Date())+" "+name+" end...");
+
+                RedissLockUtil.unlock("_lock");
+            }
+        }).start();
+
     }
 
 

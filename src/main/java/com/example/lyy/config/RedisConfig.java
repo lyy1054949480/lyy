@@ -93,6 +93,12 @@ public class RedisConfig {
         return cacheManager;
     }
 
+//
+//    @Bean
+//    public RedisLockRegistry redisLockRegistry(RedisConnectionFactory redisConnectionFactory) {
+//        return new RedisLockRegistry(redisConnectionFactory, "REDIS_LOCK");
+//    }
+
     @Bean
     @ConditionalOnMissingBean(name = "redisTemplate")
     public RedisTemplate<Object, Object> redisTemplate(

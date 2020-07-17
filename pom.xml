@@ -25,6 +25,24 @@
 
     <dependencies>
 
+        <!-- redssion -->
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson</artifactId>
+            <version>3.12.0</version>
+        </dependency>
+
+
+        <!--<dependency>-->
+            <!--<groupId>org.springframework.boot</groupId>-->
+            <!--<artifactId>spring-boot-starter-integration</artifactId>-->
+        <!--</dependency>-->
+
+        <!--<dependency>-->
+            <!--<groupId>org.springframework.integration</groupId>-->
+            <!--<artifactId>spring-integration-redis</artifactId>-->
+        <!--</dependency>-->
+
         <!-- https://mvnrepository.com/artifact/org.influxdb/influxdb-java -->
         <dependency>
             <groupId>org.influxdb</groupId>
